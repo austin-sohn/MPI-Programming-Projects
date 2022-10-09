@@ -110,7 +110,7 @@ int main(){
   string input;
 
   cout << "Enter block of < 11 instructions:\n";
-  int MAX_INSTRUCTIONS = 3;
+  int MAX_INSTRUCTIONS = 11;
 
   // adds each line into a vector
   for (int i = 0; i < MAX_INSTRUCTIONS; i++){
