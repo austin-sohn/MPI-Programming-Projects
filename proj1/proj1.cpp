@@ -58,7 +58,7 @@ bool checkParallel(string s1, string s2){
 
 vector<string> calculate(string in, vector<string> block){
   vector<string> ans;
-  
+  if(in.empty()) return ans;
   for(int i = 0; i < block.size(); i++){
     if(checkParallel(rmOp(in), rmOp(block.at(i)))){
       ans.push_back(block.at(i));
@@ -71,7 +71,7 @@ vector<string> verify(vector<string> block){
   vector<string> ans;
 
   for(int i = 0; i < block.size(); i++){
-    for(int j = i+1; j < block.size()-1; j++){
+    for(int j = i+1; j < block.size(); j++){
       if(checkParallel(rmOp(block.at(i)), rmOp(block.at(j))) && i != j){
         ans.push_back(block.at(i));
         ans.push_back(block.at(j));
@@ -110,25 +110,20 @@ int main(){
     return 0;
   }
   
-  if(!instruction.empty()){// calculate function
-    vector<string> calc = calculate(instruction, block);
-    outputText << "---CALCULATE---\n";
-    outputText << "The instruction that can be executed in parallel with " << instruction << " is:\n";
-    output(calc, outputText);
-    outputText << "---------------\n";
-    cout << "Done Calculating, check output.txt\n";
-  }
-  else if(instruction.empty()){ // verify function
-    vector<string> ver = verify(block);
-    outputText << "----VERIFY----\n";
-    outputText << "The instruction(s) that can be executed in parallel are:\n";
-    output(ver, outputText);
-    outputText << "--------------\n";
-    cout << "Done Verifying, check output.txt\n";
-  }
-  else{
-    cout << "Error\n";
-  }
+  // calculate function
+  vector<string> calc = calculate(instruction, block);
+  outputText << "---CALCULATE---\n";
+  outputText << "The instruction that can be executed in parallel with " << instruction << " is:\n";
+  output(calc, outputText);
+  outputText << "---------------\n";
+ 
+   // verify function
+  vector<string> ver = verify(block);
+  outputText << "----VERIFY----\n";
+  outputText << "The instruction(s) that can be executed in parallel are:\n";
+  output(ver, outputText);
+  outputText << "--------------\n";
+  cout << "Done check output.txt\n";
 
   outputText.close();
   return 0;
