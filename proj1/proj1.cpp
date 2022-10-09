@@ -105,34 +105,31 @@ vector<string> verify(vector<string> block){
 
 
 int main(){
-  vector<string> block1 = {"b = b * c", 
-                          "c = c - a", 
-                          "a = a + b * c"};
+  string instruction = "d = b + ( c - d / e)";
+  vector<string> block;
+  string input;
 
-  vector<string> block2 = {"b = b * c", 
-                          "d = c - a", 
-                          "a = a + b * c"};
+  cout << "Enter block of < 11 instructions:\n";
+  int MAX_INSTRUCTIONS = 3;
 
-  vector<string> block3 = {"b = a * b * c", 
-                          "c = c - a", 
-                          "a = a + b * c"};
-  
-  string input1 = "d = b + ( c - d / e)";
+  // adds each line into a vector
+  for (int i = 0; i < MAX_INSTRUCTIONS; i++){
+    getline(cin, input);
+    block.push_back(input);
+  }
+  cout << endl;
 
-  input1 = rmOp(input1);
+  // calculate function
+  // gets rid of whitespace and arithmetic operations
+  instruction = rmOp(instruction);
   cout << "CALCULATE:\n";
-  cout << calculate(input1, block1) << endl << "--------------\n";
+  cout << "The instruction that can be executed in parallel with d = b + ( c – d / e) is:\n";
+  cout << calculate(instruction, block) << endl << "--------------\n";
 
-
-
-  
-  vector<string> ver;
-  ver = verify(block2);
+  // verify function
+  block = verify(block);
   cout << "VERIFY:\n";
-  cout << "Ex1:\n";
-  output(ver);
-  ver = verify(block3);
-  cout << "\nEx2:\n";
-  output(ver);
+  cout << "The instruction(s) that can be executed in parallel are:\n";
+  output(block);
   return 0;
 }
