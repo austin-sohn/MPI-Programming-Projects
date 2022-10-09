@@ -9,8 +9,18 @@
 using namespace std;
 
 void output(vector<string> v){
-  if(v.size() == 2){
-    cout << "(" << v.at(0) << ", " << v.at(1) << ")\n";
+  if(v.empty()){
+    cout << "NONE\n";
+  }
+  else if(v.size() > 1){
+    cout << "(";
+    for(int i = 0; i < v.size(); i++){
+      if(i == v.size() - 1){
+        cout << v.at(i) << ")\n";
+        break;
+      }
+      cout << v.at(i) << ", ";  
+    }
   }
   else{
     cout << v.at(0) << endl;
@@ -45,61 +55,32 @@ bool checkParallel(string s1, string s2){
   return b;
 };
 
-string calculate(string in, vector<string> block){
-  vector<string> v;
-  string ans;
+vector<string> calculate(string in, vector<string> block){
+  vector<string> ans;
   // remove whitespace and arithmetic operators
+  
   for(int i = 0; i < block.size(); i++){
-    v.push_back(rmOp(block.at(i)));
+    if(checkParallel(rmOp(in), rmOp(block.at(i)))){
+      ans.push_back(block.at(i));
+    }
+    
   }
 
-  bool b1 = checkParallel(v.at(0), in); // in || I1?
-  bool b2 = checkParallel(v.at(1), in); // in || I2?
-  bool b3 = checkParallel(v.at(2), in); // in || I3?
-  
-  if(b1 == false && b2 == false && b3 == false){
-    ans = "NONE";
-  }
-  else if(b1 == true){ 
-    ans = block.at(0);
-  }
-  else if(b2 == true){ 
-    ans = block.at(1);
-  }
-  else if(b3 == true){
-    ans = block.at(2);
-  }
   return ans;
 }
 
 vector<string> verify(vector<string> block){
   vector<string> ans;
-  vector<string> v;
 
   // remove whitespace and arithmetic operators
   for(int i = 0; i < block.size(); i++){
-    v.push_back(rmOp(block.at(i)));
+    for(int j = i+1; j < block.size()-1; j++){
+      if(checkParallel(rmOp(block.at(i)), rmOp(block.at(j))) && i != j){
+        ans.push_back(block.at(i));
+        ans.push_back(block.at(j));
+      }
+    }
   }
-  bool b1 = checkParallel(v.at(0), v.at(1)); // I1 || I2?
-  bool b2 = checkParallel(v.at(0), v.at(2)); // I1 || I3?
-  bool b3 = checkParallel(v.at(1), v.at(2)); // I2 || I3?
-  
-  if(b1 == false && b2 == false && b3 == false){
-    ans.push_back("NONE");
-  }
-  else if(b1 == true){ 
-    ans.push_back(block.at(0));
-    ans.push_back(block.at(1));
-  }
-  else if(b2 == true){ 
-    ans.push_back(block.at(0));
-    ans.push_back(block.at(2));
-  }
-  else if(b3 == true){
-    ans.push_back(block.at(1));
-    ans.push_back(block.at(2));
-  }
-  
   return ans;
 }
 
@@ -108,28 +89,40 @@ int main(){
   string instruction = "d = b + ( c - d / e)";
   vector<string> block;
   string input;
-
-  cout << "Enter block of < 11 instructions:\n";
   int MAX_INSTRUCTIONS = 11;
 
+  cout << "Enter block of < 11 instructions:\n";
+
+
   // adds each line into a vector
-  for (int i = 0; i < MAX_INSTRUCTIONS; i++){
-    getline(cin, input);
-    block.push_back(input);
+  while(getline(cin, input)){
+    if(!input.empty()){
+      block.push_back(input);
+    }
+    else{
+      break;
+    }
   }
-  cout << endl;
+
+  if(block.size() >= MAX_INSTRUCTIONS){
+    cout << "\nERROR: Block is too large\n";
+    return 0;
+  }
+  cout << "--------------\n";;
 
   // calculate function
   // gets rid of whitespace and arithmetic operations
-  instruction = rmOp(instruction);
+  vector<string> calc = calculate(instruction, block);
   cout << "CALCULATE:\n";
   cout << "The instruction that can be executed in parallel with d = b + ( c – d / e) is:\n";
-  cout << calculate(instruction, block) << endl << "--------------\n";
+  output(calc);
+  cout << "--------------\n";
 
   // verify function
-  block = verify(block);
+  vector<string> ver = verify(block);
   cout << "VERIFY:\n";
   cout << "The instruction(s) that can be executed in parallel are:\n";
-  output(block);
+  output(ver);
+  cout << "--------------\n";
   return 0;
 }
