@@ -1,5 +1,5 @@
 // Austin Sohn
-// proj2.cc
+// proj.cc
 // 12/3/22
 // mpic++ proj2.cc
 // mpirun -n <# of times> a.out
